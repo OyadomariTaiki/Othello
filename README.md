@@ -3,7 +3,6 @@
 
 JavaScriptを用いてオセロゲームを制作しました。
 
-![ゲーム画面]
-(https://photos.google.com/u/0/photo/AF1QipOFHly9iZ8wQVgDEfvxJtRLX8ChDNJlXCfkF18T)
+https://user-images.githubusercontent.com/81083980/261834631-5f3624c8-b0cd-4c25-8fd3-06413047ee93.png
 
 **きっかけ**
