@@ -1,0 +1,33 @@
+#choice {
+  text-align: center;
+  width: 200px;
+  height: 100px;
+  margin: 300px 600px;
+}
+#bord {
+  display: none;
+  width: 448px;
+  height: 448px;
+  flex-wrap: wrap;
+  background-color: green;
+  border-style: solid;
+  margin: 150px 500px;
+}
+div:not(#bord):not(#choice) {
+  border-style: solid;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+#a28 {
+  background-color: white;
+}
+#a29 {
+  background-color: black;
+}
+#a36 {
+  background-color: black;
+}
+#a37 {
+  background-color: white;
+}

@@ -1,0 +1,4188 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+	<title>オセロ</title>
+</head>
+
+<body>
+<div id="choice">
+	<p>
+		先攻（黒）、後攻（白）を選んでさい
+	</p>
+	<button onclick="choice('first')">先攻（黒）</button>
+	<button onclick="choice('second')">後攻（白）</button>
+</div>
+<div id="bord">
+<div id="a1" onclick="judeNoPlace(1)"></div>
+<div id="a2" onclick="judeNoPlace(2)"></div>
+<div id="a3" onclick="judeNoPlace(3)"></div>
+<div id="a4" onclick="judeNoPlace(4)"></div>
+<div id="a5" onclick="judeNoPlace(5)"></div>
+<div id="a6" onclick="judeNoPlace(6)"></div>
+<div id="a7" onclick="judeNoPlace(7)"></div>
+<div id="a8" onclick="judeNoPlace(8)"></div>
+<div id="a9" onclick="judeNoPlace(9)"></div>
+<div id="a10" onclick="judeNoPlace(10)"></div>
+<div id="a11" onclick="judeNoPlace(11)"></div>
+<div id="a12" onclick="judeNoPlace(12)"></div>
+<div id="a13" onclick="judeNoPlace(13)"></div>
+<div id="a14" onclick="judeNoPlace(14)"></div>
+<div id="a15" onclick="judeNoPlace(15)"></div>
+<div id="a16" onclick="judeNoPlace(16)"></div>
+<div id="a17" onclick="judeNoPlace(17)"></div>
+<div id="a18" onclick="judeNoPlace(18)"></div>
+<div id="a19" onclick="judeNoPlace(19)"></div>
+<div id="a20" onclick="judeNoPlace(20)"></div>
+<div id="a21" onclick="judeNoPlace(21)"></div>
+<div id="a22" onclick="judeNoPlace(22)"></div>
+<div id="a23" onclick="judeNoPlace(23)"></div>
+<div id="a24" onclick="judeNoPlace(24)"></div>
+<div id="a25" onclick="judeNoPlace(25)"></div>
+<div id="a26" onclick="judeNoPlace(26)"></div>
+<div id="a27" onclick="judeNoPlace(27)"></div>
+<div id="a28" onclick="judeNoPlace(28)"></div>
+<div id="a29" onclick="judeNoPlace(29)"></div>
+<div id="a30" onclick="judeNoPlace(30)"></div>
+<div id="a31" onclick="judeNoPlace(31)"></div>
+<div id="a32" onclick="judeNoPlace(32)"></div>
+<div id="a33" onclick="judeNoPlace(33)"></div>
+<div id="a34" onclick="judeNoPlace(34)"></div>
+<div id="a35" onclick="judeNoPlace(35)"></div>
+<div id="a36" onclick="judeNoPlace(36)"></div>
+<div id="a37" onclick="judeNoPlace(37)"></div>
+<div id="a38" onclick="judeNoPlace(38)"></div>
+<div id="a39" onclick="judeNoPlace(39)"></div>
+<div id="a40" onclick="judeNoPlace(40)"></div>
+<div id="a41" onclick="judeNoPlace(41)"></div>
+<div id="a42" onclick="judeNoPlace(42)"></div>
+<div id="a43" onclick="judeNoPlace(43)"></div>
+<div id="a44" onclick="judeNoPlace(44)"></div>
+<div id="a45" onclick="judeNoPlace(45)"></div>
+<div id="a46" onclick="judeNoPlace(46)"></div>
+<div id="a47" onclick="judeNoPlace(47)"></div>
+<div id="a48" onclick="judeNoPlace(48)"></div>
+<div id="a49" onclick="judeNoPlace(49)"></div>
+<div id="a50" onclick="judeNoPlace(50)"></div>
+<div id="a51" onclick="judeNoPlace(51)"></div>
+<div id="a52" onclick="judeNoPlace(52)"></div>
+<div id="a53" onclick="judeNoPlace(53)"></div>
+<div id="a54" onclick="judeNoPlace(54)"></div>
+<div id="a55" onclick="judeNoPlace(55)"></div>
+<div id="a56" onclick="judeNoPlace(56)"></div>
+<div id="a57" onclick="judeNoPlace(57)"></div>
+<div id="a58" onclick="judeNoPlace(58)"></div>
+<div id="a59" onclick="judeNoPlace(59)"></div>
+<div id="a60" onclick="judeNoPlace(60)"></div>
+<div id="a61" onclick="judeNoPlace(61)"></div>
+<div id="a62" onclick="judeNoPlace(62)"></div>
+<div id="a63" onclick="judeNoPlace(63)"></div>
+<div id="a64" onclick="judeNoPlace(64)"></div>
+</div>
+
+<script>
+	let which;
+	let nowTurn = 1;
+	let count = 0;
+	let placeChoices = [];
+
+	//先攻、後攻を選ぶ
+	function choice(i) {
+
+		if (i == 'first') {
+			which = 1;
+			document.getElementById('choice').style.display = 'none';
+			document.getElementById('bord').style.display = 'flex';
+		}
+		if (i == 'second') {
+			which = 2;
+			document.getElementById('choice').style.display = 'none';
+			document.getElementById('bord').style.display = 'flex';
+			getEnemyPlace();
+		}
+	}
+
+	//自分のターン
+
+	//すでに置かれていない場所か確認
+	function judeNoPlace(i) {
+		if (which == 1 && nowTurn%2 == 1 || which == 2 && nowTurn%2 == 0) {
+			count = 0;
+			const justPlace = window.getComputedStyle(document.getElementById('a'+`${i}`),null).getPropertyValue('background-color');
+			if (justPlace == 'rgba(0, 0, 0, 0)') {
+				getAround(i);
+			}
+		}
+	}
+
+	//周りを把握
+	function getAround(i) {
+
+		if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14 || i == 15 || i == 18 || i == 19 || i == 20 || i == 21 || i == 22 || 
+		i == 23 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 35 || i == 36 || i == 37 || 
+		i == 38 || i == 39 || i == 42 || i == 43 || i == 44 || i == 45 || i == 46 || i == 47 || i == 50 || i == 51 || i == 52 || 
+		i == 53 || i == 54 || i == 55) {
+
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+			const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+			const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+			const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+			const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseUpright(i,uprightPlace);
+			getCanReverseRight(i,rightPlace);
+			getCanReverseDownright(i,downrightPlace);
+			getCanReverseDown(i,downPlace);
+			getCanReverseDownleft(i,downleftPlace);
+			getCanReverseLeft(i,leftPlace);
+			getCanReverseUpleft(i,upleftPlace);
+		}
+
+		if (i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7) {
+
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+			const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');			
+			const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+			getCanReverseRight(i,rightPlace);
+			getCanReverseDownright(i,downrightPlace);
+			getCanReverseDown(i,downPlace);
+			getCanReverseDownleft(i,downleftPlace);
+			getCanReverseLeft(i,leftPlace);
+		}
+		
+		if (i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56) {
+
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+			const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+			const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseDown(i,downPlace);
+			getCanReverseDownleft(i,downleftPlace);
+			getCanReverseLeft(i,leftPlace);
+			getCanReverseUpleft(i,upleftPlace);
+		}
+		
+		if (i == 9 || i == 17 || i == 25 || i == 33 || i == 41 || i == 49) {
+
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+			const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+			const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseUpright(i,uprightPlace);
+			getCanReverseRight(i,rightPlace);
+			getCanReverseDownright(i,downrightPlace);
+			getCanReverseDown(i,downPlace);
+		}
+
+		if (i == 58 || i == 59 || i == 60 || i == 61 || i == 62 || i == 63) {
+
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+			const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+			const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseUpright(i,uprightPlace);
+			getCanReverseRight(i,rightPlace);
+			getCanReverseLeft(i,leftPlace);
+			getCanReverseUpleft(i,upleftPlace);
+		}
+
+		if (i == 1) {
+
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+			const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+			getCanReverseRight(i,rightPlace);
+			getCanReverseDownright(i,downrightPlace);
+			getCanReverseDown(i,downPlace);
+		}
+
+		if (i == 8) {
+
+			const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+			const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+			getCanReverseDown(i,downPlace);
+			getCanReverseDownleft(i,downleftPlace);
+			getCanReverseLeft(i,leftPlace);
+		}
+
+		if (i == 57) {
+
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+			const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+			const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseUpright(i,uprightPlace);
+			getCanReverseRight(i,rightPlace);
+		}
+
+		if (i == 64) {
+
+			const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+			const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+			const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+
+			getCanReverseUp(i,upPlace);
+			getCanReverseLeft(i,leftPlace);
+			getCanReverseUpleft(i,upleftPlace);
+		}
+	}
+
+	//ひっくり返せる場所を確認（上）
+	function getCanReverseUp(i,upPlace) {
+
+		if (which == 1 && upPlace == 'rgb(255, 255, 255)') {
+
+			for (let j = 2; i-j*8 > 0; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					doPut(i);
+					doReverseUp(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+
+		if (which == 2 && upPlace == 'rgb(0, 0, 0)') {
+
+			for (let j = 2; i-j*8 > 0; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					doPut(i);
+					doReverseUp(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（右上）
+	function getCanReverseUpright(i,uprightPlace) {
+
+		if (which == 1 && uprightPlace == 'rgb(255, 255, 255)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+		
+		if (which == 2 && uprightPlace == 'rgb(0, 0, 0)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（右）
+	function getCanReverseRight(i,rightPlace) {
+		
+		if (which == 1 && rightPlace == 'rgb(255, 255, 255)') {
+		
+			for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					doPut(i);
+					doReverseRight(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+
+		if (which == 2 && rightPlace == 'rgb(0, 0, 0)') {
+		
+			for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					doPut(i);
+					doReverseRight(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（右下）
+	function getCanReverseDownright(i,downrightPlace) {
+
+		if (which == 1 && downrightPlace == 'rgb(255, 255, 255)') {
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downrightPlace == 'rgb(0, 0, 0)') {
+		
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownright(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（下）
+	function getCanReverseDown(i,downPlace) {
+	
+		if (which == 1 && downPlace == 'rgb(255, 255, 255)') {
+		
+			for (let j = 2; i+j*8 <= 64; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					doPut(i);
+					doReverseDown(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+
+		if (which == 2 && downPlace == 'rgb(0, 0, 0)') {
+		
+			for (let j = 2; i+j*8 <= 64; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					doPut(i);
+					doReverseDown(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（左下）
+	function getCanReverseDownleft(i,downleftPlace) {
+
+		if (which == 1 && downleftPlace == 'rgb(255, 255, 255)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downleftPlace == 'rgb(0, 0, 0)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseDownleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（左）
+	function getCanReverseLeft(i,leftPlace) {
+		
+		if (which == 1 && leftPlace == 'rgb(255, 255, 255)') {
+			if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+				for (let j = 2; i-j >=i-7 ; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseLeft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			else {
+				for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseLeft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && leftPlace == 'rgb(0, 0, 0)') {
+			if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+				for (let j = 2; i-j >= i-7 ; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseLeft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			else {
+				for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseLeft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			
+		}
+	}
+
+	//ひっくり返せる場所を確認（左上）
+	function getCanReverseUpleft(i,upleftPlace) {
+		
+		if (which == 1 && upleftPlace == 'rgb(255, 255, 255)') {
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && upleftPlace == 'rgb(0, 0, 0)') {
+		
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPut(i);
+						doReverseUpleft(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//置く
+	function doPut(i) {
+
+		if (which == 1) {
+			document.getElementById('a'+`${i}`).style.backgroundColor = 'black';
+		}
+		if (which == 2) {
+			document.getElementById('a'+`${i}`).style.backgroundColor = 'white';
+		}
+	}
+
+	//ひっくり返す（上）
+	function doReverseUp(i,j) {
+
+		if (which == 1) {
+			
+			for (let k = 1; i-k*8 > i-j*8; k++) {
+				document.getElementById('a'+`${i-k*8}`).style.backgroundColor = 'black';
+			}
+		}
+
+		if (which == 2) {
+			
+			for (let k = 1; i-k*8 > i-j*8; k++) {
+				document.getElementById('a'+`${i-k*8}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（右上）
+	function doReverseUpright(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i-k*7 > i-j*7; k++) {
+				document.getElementById('a'+`${i-k*7}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i-k*7 > i-j*7; k++) {
+				document.getElementById('a'+`${i-k*7}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（右）
+	function doReverseRight(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i+k < i+j; k++) {
+				document.getElementById('a'+`${i+k}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i+k < i+j; k++) {
+				document.getElementById('a'+`${i+k}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（右下）
+	function doReverseDownright(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i+k*9 < i+j*9; k++) {
+				document.getElementById('a'+`${i+k*9}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i+k*9 < i+j*9; k++) {
+				document.getElementById('a'+`${i+k*9}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（下）
+	function doReverseDown(i,j) {
+	
+		if (which == 1) {
+
+			for (let k = 1; i+k*8 < i+j*8; k++) {
+				document.getElementById('a'+`${i+k*8}`).style.backgroundColor = 'black';
+			}
+		}
+
+		if (which == 2) {
+
+			for (let k = 1; i+k*8 < i+j*8; k++) {
+				document.getElementById('a'+`${i+k*8}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（左下）
+	function doReverseDownleft(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i+k*7 < i+j*7; k++) {
+				document.getElementById('a'+`${i+k*7}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i+k*7 < i+j*7; k++) {
+				document.getElementById('a'+`${i+k*7}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（左）
+	function doReverseLeft(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i-k > i-j; k++) {
+				document.getElementById('a'+`${i-k}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i-k > i-j; k++) {
+				document.getElementById('a'+`${i-k}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ひっくり返す（左上）
+	function doReverseUpleft(i,j) {
+		
+		if (which == 1) {
+			for (let k = 1; i-k*9 > i-j*9; k++) {
+				document.getElementById('a'+`${i-k*9}`).style.backgroundColor = 'black';
+			}
+		}
+		if (which == 2) {
+			for (let k = 1; i-k*9 > i-j*9; k++) {
+				document.getElementById('a'+`${i-k*9}`).style.backgroundColor = 'white';
+			}
+		}
+	}
+
+	//ターンを交代する
+	function changeTurn() {
+
+		if (count == 1) {
+			console.log(nowTurn);
+			nowTurn++;
+
+			if (which == 1 && nowTurn%2 == 0) {
+				getEnemyPlace();
+			}
+
+			if (which == 2 && nowTurn%2 == 1) {
+				getEnemyPlace();
+			}
+		}
+	}
+
+	//相手のターン
+
+	//相手の石の位置を取得
+	function getEnemyPlace() {
+		count = 0;
+		const enemyPlace = [];
+		for (i=1; i<=64; i++) {
+			if (which == 1 && window.getComputedStyle(document.getElementById('a'+`${i}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)' || which == 2 && window.getComputedStyle(document.getElementById('a'+`${i}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				enemyPlace.push(i);
+			}
+		}
+		getTouchPlace(enemyPlace);
+	}
+
+	//相手の石に触れている箇所を取得
+	function getTouchPlace(enemyPlace) {
+		const touchPlaceDuplicate = [];
+		enemyPlace.forEach(function(i) {
+			if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14 || i == 15 || i == 18 || i == 19 || i == 20 || i == 21 || i == 22 || 
+			i == 23 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 35 || i == 36 || i == 37 || 
+			i == 38 || i == 39 || i == 42 || i == 43 || i == 44 || i == 45 || i == 46 || i == 47 || i == 50 || i == 51 || i == 52 || 
+			i == 53 || i == 54 || i == 55) {
+				touchPlaceDuplicate.push(i-8);
+				touchPlaceDuplicate.push(i-7);
+				touchPlaceDuplicate.push(i+1);
+				touchPlaceDuplicate.push(i+9);
+				touchPlaceDuplicate.push(i+8);
+				touchPlaceDuplicate.push(i+7);
+				touchPlaceDuplicate.push(i-1);
+				touchPlaceDuplicate.push(i-9);
+			}
+			if (i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7) {
+				touchPlaceDuplicate.push(i+1);
+				touchPlaceDuplicate.push(i+9);
+				touchPlaceDuplicate.push(i+8);
+				touchPlaceDuplicate.push(i+7);
+				touchPlaceDuplicate.push(i-1);
+			}
+			if (i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56) {
+				touchPlaceDuplicate.push(i-8);
+				touchPlaceDuplicate.push(i+8);
+				touchPlaceDuplicate.push(i+7);
+				touchPlaceDuplicate.push(i-1);
+				touchPlaceDuplicate.push(i-9);
+			}
+			if (i == 9 || i == 17 || i == 25 || i == 33 || i == 41 || i == 49) {
+				touchPlaceDuplicate.push(i-8);
+				touchPlaceDuplicate.push(i-7);
+				touchPlaceDuplicate.push(i+1);
+				touchPlaceDuplicate.push(i+9);
+				touchPlaceDuplicate.push(i+8);
+			}
+			if (i == 58 || i == 59 || i == 60 || i == 61 || i == 62 || i == 63) {
+				touchPlaceDuplicate.push(i-8);
+				touchPlaceDuplicate.push(i-7);
+				touchPlaceDuplicate.push(i+1);
+				touchPlaceDuplicate.push(i-1);
+				touchPlaceDuplicate.push(i-9);
+			}
+			if (i == 1) {
+				touchPlaceDuplicate.push(i+1);
+				touchPlaceDuplicate.push(i+9);
+				touchPlaceDuplicate.push(i+8);
+			}
+			if (i == 8) {
+				touchPlaceDuplicate.push(i+8);
+				touchPlaceDuplicate.push(i+7);
+				touchPlaceDuplicate.push(i-1);
+			}
+			if (i == 57) {
+				touchPlaceDuplicate.push(i-8);
+				touchPlaceDuplicate.push(i-7);
+				touchPlaceDuplicate.push(i+1);
+			}
+			if (i == 64) {
+				touchPlaceDuplicate.push(i-1);
+				touchPlaceDuplicate.push(i-9);
+				touchPlaceDuplicate.push(i-8);
+			}
+		});
+		const touchPlace = touchPlaceDuplicate.filter(function (x, i, self) {
+            return self.indexOf(x) === i;
+        });
+		getNoPlace(touchPlace);
+	}
+
+	//すでに置かれていない箇所を取得
+	function getNoPlace(touchPlace) {
+		const noPlace = [];
+		touchPlace.forEach(function(i){
+			if (window.getComputedStyle(document.getElementById('a'+`${i}`),null).getPropertyValue('background-color') == 'rgba(0, 0, 0, 0)') {
+				noPlace.push(i);
+			}
+		});
+		getAroundEnemy(noPlace);
+	}
+
+	//周りを把握
+	function getAroundEnemy(noPlace) {
+		noPlace.forEach(function(i){
+			if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14 || i == 15 || i == 18 || i == 19 || i == 20 || i == 21 || i == 22 || 
+			i == 23 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 35 || i == 36 || i == 37 || 
+			i == 38 || i == 39 || i == 42 || i == 43 || i == 44 || i == 45 || i == 46 || i == 47 || i == 50 || i == 51 || i == 52 || 
+			i == 53 || i == 54 || i == 55) {
+
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+				const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+				const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+				const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+				const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseUprightEnemy(i,uprightPlace);
+				getCanReverseRightEnemy(i,rightPlace);
+				getCanReverseDownrightEnemy(i,downrightPlace);
+				getCanReverseDownEnemy(i,downPlace);
+				getCanReverseDownleftEnemy(i,downleftPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+				getCanReverseUpleftEnemy(i,upleftPlace);
+			}
+
+			if (i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7) {
+
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+				const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');			
+				const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+				getCanReverseRightEnemy(i,rightPlace);
+				getCanReverseDownrightEnemy(i,downrightPlace);
+				getCanReverseDownEnemy(i,downPlace);
+				getCanReverseDownleftEnemy(i,downleftPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+			}
+			
+			if (i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56) {
+
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+				const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+				const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseDownEnemy(i,downPlace);
+				getCanReverseDownleftEnemy(i,downleftPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+				getCanReverseUpleftEnemy(i,upleftPlace);
+			}
+			
+			if (i == 9 || i == 17 || i == 25 || i == 33 || i == 41 || i == 49) {
+
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+				const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+				const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseUprightEnemy(i,uprightPlace);
+				getCanReverseRightEnemy(i,rightPlace);
+				getCanReverseDownrightEnemy(i,downrightPlace);
+				getCanReverseDownEnemy(i,downPlace);
+			}
+
+			if (i == 58 || i == 59 || i == 60 || i == 61 || i == 62 || i == 63) {
+
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+				const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+				const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseUprightEnemy(i,uprightPlace);
+				getCanReverseRightEnemy(i,rightPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+				getCanReverseUpleftEnemy(i,upleftPlace);
+			}
+
+			if (i == 1) {
+
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+				const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+				getCanReverseRightEnemy(i,rightPlace);
+				getCanReverseDownrightEnemy(i,downrightPlace);
+				getCanReverseDownEnemy(i,downPlace);
+			}
+
+			if (i == 8) {
+
+				const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+				const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+				getCanReverseDownEnemy(i,downPlace);
+				getCanReverseDownleftEnemy(i,downleftPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+			}
+
+			if (i == 57) {
+
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+				const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+				const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseUprightEnemy(i,uprightPlace);
+				getCanReverseRightEnemy(i,rightPlace);
+			}
+
+			if (i == 64) {
+
+				const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+				const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+				const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+
+				getCanReverseUpEnemy(i,upPlace);
+				getCanReverseLeftEnemy(i,leftPlace);
+				getCanReverseUpleftEnemy(i,upleftPlace);
+			}
+		});
+	}
+
+	//ひっくり返せる場所を確認（上）
+	function getCanReverseUpEnemy(i,upPlace) {
+
+	if (which == 1 && upPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i-j*8 > 0; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && upPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i-j*8 > 0; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（右上）
+	function getCanReverseUprightEnemy(i,uprightPlace) {
+
+	if (which == 1 && uprightPlace == 'rgb(0, 0, 0)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+		
+		if (which == 2 && uprightPlace == 'rgb(255, 255, 255)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（右）
+	function getCanReverseRightEnemy(i,rightPlace) {
+
+	if (which == 1 && rightPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && rightPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（右下）
+	function getCanReverseDownrightEnemy(i,downrightPlace) {
+
+	if (which == 1 && downrightPlace == 'rgb(0, 0, 0)') {
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downrightPlace == 'rgb(255, 255, 255)') {
+		
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（下）
+	function getCanReverseDownEnemy(i,downPlace) {
+
+	if (which == 1 && downPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i+j*8 <= 64; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && downPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i+j*8 <= 64; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				getCanPlaces(i);
+				setTimeout(decisionPlace,1000);
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（左下）
+	function getCanReverseDownleftEnemy(i,downleftPlace) {
+
+	if (which == 1 && downleftPlace == 'rgb(0, 0, 0)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downleftPlace == 'rgb(255, 255, 255)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（左）
+	function getCanReverseLeftEnemy(i,leftPlace) {
+
+	if (which == 1 && leftPlace == 'rgb(0, 0, 0)') {
+		if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+			for (let j = 2; i-j >= i-7 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					getCanPlaces(i);
+					setTimeout(decisionPlace,1000);
+					break;
+				}
+			}
+		}
+		else {
+			for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					getCanPlaces(i);
+					setTimeout(decisionPlace,1000);
+					break;
+				}
+			}
+		}
+	}
+
+	if (which == 2 && leftPlace == 'rgb(255, 255, 255)') {
+		if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+			for (let j = 2; i-j >= i-7; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					getCanPlaces(i);
+					setTimeout(decisionPlace,1000);
+					break;
+				}
+			}
+		}
+		else {
+			for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					getCanPlaces(i);
+					setTimeout(decisionPlace,1000);
+					break;
+				}
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（左上）
+	function getCanReverseUpleftEnemy(i,upleftPlace) {
+
+	if (which == 1 && upleftPlace == 'rgb(0, 0, 0)') {
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && upleftPlace == 'rgb(255, 255, 255)') {
+		
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						getCanPlaces(i);
+						setTimeout(decisionPlace,1000);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//置ける場所を取得する
+	function getCanPlaces(i) {
+		placeChoices.push(i);
+	}
+
+	//置く場所を決定する
+	function decisionPlace() {
+		putPlace = placeChoices[0];
+		placeChoices = [];
+		if (putPlace !== undefined) {
+			getAroundEnemyAfter(putPlace);
+		}
+	}
+
+	//周りを把握
+	function getAroundEnemyAfter(i) {
+
+if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14 || i == 15 || i == 18 || i == 19 || i == 20 || i == 21 || i == 22 || 
+i == 23 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 35 || i == 36 || i == 37 || 
+i == 38 || i == 39 || i == 42 || i == 43 || i == 44 || i == 45 || i == 46 || i == 47 || i == 50 || i == 51 || i == 52 || 
+i == 53 || i == 54 || i == 55) {
+
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+	const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+	const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+	const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+	const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseUprightEnemyAfter(i,uprightPlace);
+	getCanReverseRightEnemyAfter(i,rightPlace);
+	getCanReverseDownrightEnemyAfter(i,downrightPlace);
+	getCanReverseDownEnemyAfter(i,downPlace);
+	getCanReverseDownleftEnemyAfter(i,downleftPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+	getCanReverseUpleftEnemyAfter(i,upleftPlace);
+}
+
+if (i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7) {
+
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+	const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');			
+	const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+	getCanReverseRightEnemyAfter(i,rightPlace);
+	getCanReverseDownrightEnemyAfter(i,downrightPlace);
+	getCanReverseDownEnemyAfter(i,downPlace);
+	getCanReverseDownleftEnemyAfter(i,downleftPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+}
+
+if (i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56) {
+
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+	const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+	const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseDownEnemyAfter(i,downPlace);
+	getCanReverseDownleftEnemyAfter(i,downleftPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+	getCanReverseUpleftEnemyAfter(i,upleftPlace);
+}
+
+if (i == 9 || i == 17 || i == 25 || i == 33 || i == 41 || i == 49) {
+
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+	const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+	const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseUprightEnemyAfter(i,uprightPlace);
+	getCanReverseRightEnemyAfter(i,rightPlace);
+	getCanReverseDownrightEnemyAfter(i,downrightPlace);
+	getCanReverseDownEnemyAfter(i,downPlace);
+}
+
+if (i == 58 || i == 59 || i == 60 || i == 61 || i == 62 || i == 63) {
+
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+	const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+	const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseUprightEnemyAfter(i,uprightPlace);
+	getCanReverseRightEnemyAfter(i,rightPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+	getCanReverseUpleftEnemyAfter(i,upleftPlace);
+}
+
+if (i == 1) {
+
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+	const downrightPlace = window.getComputedStyle(document.getElementById('a'+`${i+9}`),null).getPropertyValue('background-color');
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+
+	getCanReverseRightEnemyAfter(i,rightPlace);
+	getCanReverseDownrightEnemyAfter(i,downrightPlace);
+	getCanReverseDownEnemyAfter(i,downPlace);
+}
+
+if (i == 8) {
+
+	const downPlace = window.getComputedStyle(document.getElementById('a'+`${i+8}`),null).getPropertyValue('background-color');
+	const downleftPlace = window.getComputedStyle(document.getElementById('a'+`${i+7}`),null).getPropertyValue('background-color');
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+
+	getCanReverseDownEnemyAfter(i,downPlace);
+	getCanReverseDownleftEnemyAfter(i,downleftPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+}
+
+if (i == 57) {
+
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+	const uprightPlace = window.getComputedStyle(document.getElementById('a'+`${i-7}`),null).getPropertyValue('background-color');
+	const rightPlace = window.getComputedStyle(document.getElementById('a'+`${i+1}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseUprightEnemyAfter(i,uprightPlace);
+	getCanReverseRightEnemyAfter(i,rightPlace);
+}
+
+if (i == 64) {
+
+	const leftPlace = window.getComputedStyle(document.getElementById('a'+`${i-1}`),null).getPropertyValue('background-color');
+	const upleftPlace = window.getComputedStyle(document.getElementById('a'+`${i-9}`),null).getPropertyValue('background-color');
+	const upPlace = window.getComputedStyle(document.getElementById('a'+`${i-8}`),null).getPropertyValue('background-color');
+
+	getCanReverseUpEnemyAfter(i,upPlace);
+	getCanReverseLeftEnemyAfter(i,leftPlace);
+	getCanReverseUpleftEnemyAfter(i,upleftPlace);
+}
+}
+
+	//ひっくり返せる場所を確認（上）
+	function getCanReverseUpEnemyAfter(i,upPlace) {
+
+	if (which == 1 && upPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i-j*8 > 0; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				doPutEnemy(i);
+				doReverseUpEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && upPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i-j*8 > 0; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i-j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				doPutEnemy(i);
+				doReverseUpEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（右上）
+	function getCanReverseUprightEnemyAfter(i,uprightPlace) {
+
+	if (which == 1 && uprightPlace == 'rgb(0, 0, 0)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+		
+		if (which == 2 && uprightPlace == 'rgb(255, 255, 255)') {
+			if (i == 17 || i == 10) {
+				for (let j = 2; i-j*7 >=3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 18 || i == 11) {
+				for (let j = 2; i-j*7 >=4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 26 || i == 19 || i == 12) {
+				for (let j = 2; i-j*7 >=5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 41 || i == 34 || i == 27 || i == 20 || i == 13) {
+				for (let j = 2; i-j*7 >=6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 49 || i == 42 || i == 35 || i == 28 || i == 21 || i == 14) {
+				for (let j = 2; i-j*7 >=7; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 57 || i == 50 || i == 43 || i == 36 || i == 29 || i == 22 || i == 15) {
+				for (let j = 2; i-j*7 >=8; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 58 || i == 51 || i == 44 || i == 37 || i == 30 || i == 23) {
+				for (let j = 2; i-j*7 >=16; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 59 || i == 52 || i == 45 || i == 38 || i == 31) {
+				for (let j = 2; i-j*7 >=24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 53 || i == 46 || i == 39) {
+				for (let j = 2; i-j*7 >=32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 54 || i == 47) {
+				for (let j = 2; i-j*7 >=40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 55) {
+				for (let j = 2; i-j*7 >=48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUprightEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（右）
+	function getCanReverseRightEnemyAfter(i,rightPlace) {
+
+	if (which == 1 && rightPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				doPutEnemy(i);
+				doReverseRightEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && rightPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i+j <= Math.floor(i/8)*8+8 ; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				doPutEnemy(i);
+				doReverseRightEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（右下）
+	function getCanReverseDownrightEnemyAfter(i,downrightPlace) {
+
+	if (which == 1 && downrightPlace == 'rgb(0, 0, 0)') {
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downrightPlace == 'rgb(255, 255, 255)') {
+		
+			if (i == 41) {
+				for (let j = 2; i+j*9 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 33 || i == 42) {
+				for (let j = 2; i+j*9 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 25 || i == 34 || i == 43) {
+				for (let j = 2; i+j*9 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 17 || i == 26 || i == 35 || i == 44) {
+				for (let j = 2; i+j*9 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 9 || i == 18 || i == 27 || i == 36 || i == 45) {
+				for (let j = 2; i+j*9 <= 63; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 1 || i == 10 || i == 19 || i == 28 || i == 37 || i == 46) {
+				for (let j = 2; i+j*9 <= 64; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 2 || i == 11 || i == 20 || i == 29 || i == 38) {
+				for (let j = 2; i+j*9 <= 56; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 3 || i == 12 || i == 21 || i == 30) {
+				for (let j = 2; i+j*9 <= 48; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 13 || i == 22) {
+				for (let j = 2; i+j*9 <= 40; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 14) {
+				for (let j = 2; i+j*9 <= 32; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6) {
+				for (let j = 2; i+j*9 <= 24; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+				doReverseDownrightEnemy(i,j);
+				count++;
+				changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（下）
+	function getCanReverseDownEnemyAfter(i,downPlace) {
+
+	if (which == 1 && downPlace == 'rgb(0, 0, 0)') {
+
+		for (let j = 2; i+j*8 <= 64; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+				doPutEnemy(i);
+				doReverseDownEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+
+	if (which == 2 && downPlace == 'rgb(255, 255, 255)') {
+
+		for (let j = 2; i+j*8 <= 64; j++) {
+			if (window.getComputedStyle(document.getElementById('a'+`${i+j*8}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+				doPutEnemy(i);
+				doReverseDownEnemy(i,j);
+				count++;
+				changeTurn();
+				break;
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（左下）
+	function getCanReverseDownleftEnemyAfter(i,downleftPlace) {
+
+	if (which == 1 && downleftPlace == 'rgb(0, 0, 0)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && downleftPlace == 'rgb(255, 255, 255)') {
+			if (i == 3) {
+				for (let j = 2; i+j*7 <= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 4 || i == 11) {
+				for (let j = 2; i+j*7 <= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 5 || i == 12 || i == 19) {
+				for (let j = 2; i+j*7 <= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 6 || i == 13 || i == 20 || i == 27) {
+				for (let j = 2; i+j*7 <= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 7 || i == 14 || i == 21 || i == 28 || i == 35) {
+				for (let j = 2; i+j*7 <= 49; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 8 || i == 15 || i == 22 || i == 29 || i == 36 || i == 43) {
+				for (let j = 2; i+j*7 <= 57; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 16 || i == 23 || i == 30 || i == 37 || i == 44) {
+				for (let j = 2; i+j*7 <= 58; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24 || i == 31 || i == 38 || i == 45) {
+				for (let j = 2; i+j*7 <= 59; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 39 || i == 46) {
+				for (let j = 2; i+j*7 <= 60; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 47) {
+				for (let j = 2; i+j*7 <= 61; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48) {
+				for (let j = 2; i+j*7 <= 62; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i+j*7}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseDownleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//ひっくり返せる場所を確認（左）
+	function getCanReverseLeftEnemyAfter(i,leftPlace) {
+
+	if (which == 1 && leftPlace == 'rgb(0, 0, 0)') {
+		if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+			for (let j = 2; i-j >= i-7 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					doPutEnemy(i);
+					doReverseLeftEnemy(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+		else {
+			for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+					doPutEnemy(i);
+					doReverseLeftEnemy(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+	}
+
+	if (which == 2 && leftPlace == 'rgb(255, 255, 255)') {
+		if (i == 8 || i == 16 || i == 24 || i == 32 || i == 40 || i == 48 || i == 56 || i == 64) {
+			for (let j = 2; i-j >= i-7 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					doPutEnemy(i);
+					doReverseLeftEnemy(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+		else {
+			for (let j = 2; i-j >= Math.floor(i/8)*8+1 ; j++) {
+				if (window.getComputedStyle(document.getElementById('a'+`${i-j}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+					doPutEnemy(i);
+					doReverseLeftEnemy(i,j);
+					count++;
+					changeTurn();
+					break;
+				}
+			}
+		}
+	}
+	}
+
+	//ひっくり返せる場所を確認（左上）
+	function getCanReverseUpleftEnemyAfter(i,upleftPlace) {
+
+	if (which == 1 && upleftPlace == 'rgb(0, 0, 0)') {
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(255, 255, 255)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+
+		if (which == 2 && upleftPlace == 'rgb(255, 255, 255)') {
+		
+			if (i == 59) {
+				for (let j = 2; i-j*9 >= 41; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 60 || i == 51) {
+				for (let j = 2; i-j*9 >= 33; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 61 || i == 52 || i == 43) {
+				for (let j = 2; i-j*9 >= 25; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 62 || i == 53 || i == 44 || i == 35) {
+				for (let j = 2; i-j*9 >= 17; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 63 || i == 54 || i == 45 || i == 36 || i == 27) {
+				for (let j = 2; i-j*9 >= 9; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 64 || i == 55 || i == 46 || i == 37 || i == 28 || i == 19) {
+				for (let j = 2; i-j*9 >= 1; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 56 || i == 47 || i == 38 || i == 29 || i == 20) {
+				for (let j = 2; i-j*9 >= 2; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 48 || i == 39 || i == 30 || i == 21) {
+				for (let j = 2; i-j*9 >= 3; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 40 || i == 31 || i == 22) {
+				for (let j = 2; i-j*9 >= 4; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 32 || i == 23) {
+				for (let j = 2; i-j*9 >= 5; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+			if (i == 24) {
+				for (let j = 2; i-j*9 >= 6; j++) {
+					if (window.getComputedStyle(document.getElementById('a'+`${i-j*9}`),null).getPropertyValue('background-color') == 'rgb(0, 0, 0)') {
+						doPutEnemy(i);
+						doReverseUpleftEnemy(i,j);
+						count++;
+						changeTurn();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//置く
+	function doPutEnemy(i) {
+
+	if (which == 1) {
+		document.getElementById('a'+`${i}`).style.backgroundColor = 'white';
+	}
+	if (which == 2) {
+		document.getElementById('a'+`${i}`).style.backgroundColor = 'black';
+	}
+	}
+
+	//ひっくり返す（上）
+	function doReverseUpEnemy(i,j) {
+
+	if (which == 1) {
+		
+		for (let k = 1; i-k*8 > i-j*8; k++) {
+			document.getElementById('a'+`${i-k*8}`).style.backgroundColor = 'white';
+		}
+	}
+
+	if (which == 2) {
+		
+		for (let k = 1; i-k*8 > i-j*8; k++) {
+			document.getElementById('a'+`${i-k*8}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（右上）
+	function doReverseUprightEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i-k*7 > i-j*7; k++) {
+			document.getElementById('a'+`${i-k*7}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i-k*7 > i-j*7; k++) {
+			document.getElementById('a'+`${i-k*7}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（右）
+	function doReverseRightEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i+k < i+j; k++) {
+			document.getElementById('a'+`${i+k}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i+k < i+j; k++) {
+			document.getElementById('a'+`${i+k}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（右下）
+	function doReverseDownrightEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i+k*9 < i+j*9; k++) {
+			document.getElementById('a'+`${i+k*9}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i+k*9 < i+j*9; k++) {
+			document.getElementById('a'+`${i+k*9}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（下）
+	function doReverseDownEnemy(i,j) {
+
+	if (which == 1) {
+
+		for (let k = 1; i+k*8 < i+j*8; k++) {
+			document.getElementById('a'+`${i+k*8}`).style.backgroundColor = 'white';
+		}
+	}
+
+	if (which == 2) {
+
+		for (let k = 1; i+k*8 < i+j*8; k++) {
+			document.getElementById('a'+`${i+k*8}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（左下）
+	function doReverseDownleftEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i+k*7 < i+j*7; k++) {
+			document.getElementById('a'+`${i+k*7}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i+k*7 < i+j*7; k++) {
+			document.getElementById('a'+`${i+k*7}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（左）
+	function doReverseLeftEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i-k > i-j; k++) {
+			document.getElementById('a'+`${i-k}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i-k > i-j; k++) {
+			document.getElementById('a'+`${i-k}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+	//ひっくり返す（左上）
+	function doReverseUpleftEnemy(i,j) {
+
+	if (which == 1) {
+		for (let k = 1; i-k*9 > i-j*9; k++) {
+			document.getElementById('a'+`${i-k*9}`).style.backgroundColor = 'white';
+		}
+	}
+	if (which == 2) {
+		for (let k = 1; i-k*9 > i-j*9; k++) {
+			document.getElementById('a'+`${i-k*9}`).style.backgroundColor = 'black';
+		}
+	}
+	}
+
+</script>
+</body>
+</html>
